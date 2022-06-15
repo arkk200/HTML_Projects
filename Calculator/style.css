@@ -1,0 +1,48 @@
+*{
+    margin:0;
+    padding:0;
+}
+body{
+    background-color: pink;
+}
+#container{
+    margin: 100px auto;
+    padding:10px;
+    width: min-content;
+    border-radius: 10px;
+    background-color: lightgray;
+}
+#window{
+    font-size: 0;
+    display: flex;
+    justify-content: center;
+}
+#window input{
+    margin: 2px;
+    width: 212px;
+    height: 50px;
+    border-radius: 10px;
+    text-align:right;
+    border: none;
+}
+#buttons div{
+    display: flex;
+    justify-content: center;
+    font-size: 0;
+}
+button{
+    margin: 2px;
+    width: 50px;
+    height: 50px;
+    background-color: black;
+    border-radius: 10px;
+    color: white;
+}
+button:hover{
+    background-color: #777;
+    border: 1px solid black;
+    color: black;
+}
+button:active{
+    background-color: #444;
+}
