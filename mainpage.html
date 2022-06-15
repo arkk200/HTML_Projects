@@ -27,15 +27,11 @@
         }
         #window input{
             margin: 2px;
-            width: 158px;
+            width: 212px;
             height: 50px;
             border-radius: 10px;
             text-align:right;
             border: none;
-        }
-        #window #operator{
-            text-align: center;
-            width: 50px;
         }
         #buttons div{
             display: flex;
@@ -64,7 +60,6 @@
     <div id="container">
         <div id="window">
             <input readonly type="text" id="result">
-            <input readonly type="text" id="operator">
         </div>
         <div id="buttons">
             <div>
@@ -95,7 +90,7 @@
     </div>
     <script>
         const onClickNumber = (event) => () => {
-            if(op[count]) {count++; $result.value = ''; $op.value = '';}
+            if(op[count]) {count++;}
             if(setInitial) {value = []; $result.value = ''; setInitial = false;}
             if(value[count] == undefined) { value[count] = ''; }
             value[count] += event;
@@ -104,7 +99,7 @@
         const onClickCal = (event) => () => {
             if(value[count]){
                 op[count] = event;
-                $op.value = event;
+                $result.value += event;
                 setInitial = false;
             }
         };
@@ -114,7 +109,6 @@
             value = [];
             op = [];
             $result.value = '';
-            $op.value = '';
         };
 
         const showResult = () => {
@@ -184,7 +178,6 @@
         document.querySelector('#is').addEventListener('click', showResult);
         document.querySelector('#clear').addEventListener('click', Clear);
         $result = document.querySelector('#result');
-        $op = document.querySelector('#operator');
         $is = document.querySelector('#is');
 
         let num;
@@ -196,4 +189,4 @@
         $is.addEventListener('click', showResult);
     </script>
 </body>
-    </html>
+</html>
