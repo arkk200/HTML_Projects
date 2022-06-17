@@ -1,46 +1,72 @@
+let num;
+let res = '';
+let count = 0;
+let value = [];
+let op = [];
+let setInitial = false;
+
 const onClickNumber = (event) => () => {
     if(op[count]) {count++;}
-    if(setInitial) {value = []; result = ''; setInitial = false;}
+    if(setInitial) {value = []; res = ''; setInitial = false;}
     if(value[count] == undefined) {value[count] = '';} // value[count]가 undefined이면 ''값으로 초기화
-    if(value[count] === 0) result = result.slice(0, -1); // value[count]가 0일 때 값이 입력 되면 result 뒤에 0 제거
+    if(value[count] === 0) res = res.slice(0, -1); // value[count]가 0일 때 값이 입력 되면 result 뒤에 0 제거
     // 0이 입력된다면 화면에 0 하나만 표시한다.
-    if(!value[count] && event == 0) {console.log("a"); value[count] = 0; result += 0; $result.value = result; return;}
+    if(!value[count] && event == 0) { value[count] = 0; res += 0; result.value = res; return;}
     value[count] += event;
-    result += event;
-    $result.value = result;
+    res += event;
+    result.value = res;
+};
+const onKeyDownNumber = (event) => {
+    if(op[count]) {count++;}
+    if(setInitial) {value = []; res = ''; setInitial = false;}
+    if(value[count] == undefined) {value[count] = '';} // value[count]가 undefined이면 ''값으로 초기화
+    if(value[count] === 0) res = res.slice(0, -1); // value[count]가 0일 때 값이 입력 되면 result 뒤에 0 제거
+    // 0이 입력된다면 화면에 0 하나만 표시한다.
+    if(!value[count] && event == 0) { value[count] = 0; res += 0; result.value = res; return;}
+    value[count] += event;
+    res += event;
+    result.value = res;
 };
 const onClickCal = (event) => () => {
     if(value[count] || value[count] === 0){
-        console.log()
-        if(!!op[count]) result = result.slice(0, -1);
+        if(!!op[count]) res = res.slice(0, -1);
         op[count] = event;
-        result += event;
-        $result.value = result;
+        res += event;
+        result.value = res;
+        setInitial = false;
+    }
+};
+const onKeyDownCal = (event) => {
+    if(value[count] || value[count] === 0){
+        if(!!op[count]) res = res.slice(0, -1);
+        op[count] = event;
+        res += event;
+        result.value = res;
         setInitial = false;
     }
 };
 const Clear = () => {
     num = 0;
-    result = '';
+    res = '';
     count = 0;
     value = [];
     op = [];
-    $result.value = '';
+    result.value = '';
 };
 
 const ClearEntry = () => {
     if(op[count]){
         op[count] = '';
-        result = result.slice(0, -1);
+        res = res.slice(0, -1);
     }
     else if(value[count] || value[count] == 0){
         for(let i = 0; i < String(value[count]).length; i++){
-            result = result.slice(0, -1);
+            res = res.slice(0, -1);
         }
         value[count] = '';
         if(!!count) count--;
     }
-    $result.value = result;
+    result.value = res;
 }
 
 const showResult = () => {
@@ -66,14 +92,14 @@ const showResult = () => {
         }
         for(let i = 0; op[i]; i++){
             if(op[i] == '+'){
-                console.log(value[i], op[i], value[i+1]);
+                // console.log(value[i], op[i], value[i+1]); // + 연산 테스트
                 num = parseFloat(value[i]) + parseFloat(value[i+1]); // value : [1, 2, 3, 4] // op : ['*', '*', '*']
                 op.splice(i, 1);
                 value.splice(i, 2);
                 value.splice(i, 0, num);
                 i--;
             }else if(op[i] == '-'){
-                console.log(value[i], op[i], value[i+1]);
+                // console.log(value[i], op[i], value[i+1]); // - 연산 테스트
                 num = parseFloat(value[i]) - parseFloat(value[i+1]);
                 op.splice(i, 1);
                 value.splice(i, 2);
@@ -81,8 +107,8 @@ const showResult = () => {
                 i--;
             }
         }
-        $result.value = value[0];
-        result = String(value[0]);
+        result.value = value[0];
+        res = String(value[0]);
         num = 0;
         count = 0;
         op = [];
@@ -111,13 +137,47 @@ document.querySelector('#multiple').addEventListener('click', onClickCal('*'));
 document.querySelector('#is').addEventListener('click', showResult);
 document.querySelector('#clear').addEventListener('click', Clear);
 document.querySelector('#clearEntry').addEventListener('click', ClearEntry);
-$result = document.querySelector('#result');
-$is = document.querySelector('#is');
 
-let num;
-let result = '';
-let count = 0;
-let value = [];
-let op = [];
-let setInitial = false;
-$is.addEventListener('click', showResult);
+let crtlStatus = false;
+window.addEventListener('keydown', event => {
+    // console.log(event.key); // key 테스트
+    switch(event.key){
+        case '1': onKeyDownNumber('1');
+            break;
+        case '2': onKeyDownNumber('2');
+            break;
+        case '3': onKeyDownNumber('3');
+            break;
+        case '4': onKeyDownNumber('4');
+            break;
+        case '5': onKeyDownNumber('5');
+            break;
+        case '6': onKeyDownNumber('6');
+            break;
+        case '7': onKeyDownNumber('7');
+            break;
+        case '8': onKeyDownNumber('8');
+            break;
+        case '9': onKeyDownNumber('9');
+            break;
+        case '0': onKeyDownNumber('0');
+            break;
+        case '+': onKeyDownCal('+');
+            break;
+        case '-': onKeyDownCal('-');
+            break;
+        case '*': onKeyDownCal('*');
+            break;
+        case '/': onKeyDownCal('/');
+            break;
+        case 'Enter': showResult();
+            break;
+        case 'Control': crtlStatus = true;
+            break;
+        case 'Backspace': crtlStatus?Clear():ClearEntry();
+            break;
+    }
+})
+window.addEventListener("keyup", event => {
+    crtlStatus = false;
+});
