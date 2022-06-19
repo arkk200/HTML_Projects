@@ -5,7 +5,7 @@ let value = []; // 입력받은 숫자가 저장되는 배열
 let op = []; // 입력받은 연산자가 저장되는 배열
 let setInitial = false; // 연산결과 표시 후 숫자를 입력하면 초기화, 연산자를 입력하면 이어쓰는 동작을 하기 위한 변수
 
-const onClickNumber = (event) => () => { // document.addEventListener로 마우스를 통해 함수를 실행하기에 중첩 함수로 선언
+const onClickNumber = (event) => { // document.addEventListener로 마우스를 통해 함수를 실행하기에 중첩 함수로 선언
     if(op[count]) {count++;} // 숫자를 입력 후 연산자가 입력되면 op[count]는 true가 되고 count를 증가시켜 다음 배열에 value를 담게 해줌
     // 연산결과 표시 후 숫자가 입력되면 전체 초기화를 위해 value를 빈 배열로 초기화, setInitial을 false로 변환
     // (op 배열은 밑에 showResult함수가 실행되어 결과가 표시된 후 빈 배열로 초기화 해줌)
@@ -16,19 +16,19 @@ const onClickNumber = (event) => () => { // document.addEventListener로 마우�
     // res를 0으로 초기화하면 기존에 입력된 사칙연산이 다 날라가기에 0을 더함
     // 0이 늘어나는 것을 막기 위해 13번 줄에 value[count]가 0인지 판단 후 뒤에 값(0)을 제거함
     // 그리고 return으로 함수를 반환
-    if(!value[count] && event == 0) { value[count] = 0; res += 0; result.value = res; return;}
+    if(!value[count] && event.target.textContent == '0') { value[count] = 0; res += 0; result.value = res; return;}
     // 입력된 숫자를 value[count], res에 붙여씀
-    value[count] += event;
-    res += event;
+    value[count] += event.target.textContent;
+    res += event.target.textContent;
     // result.value = res;를 통해 사칙연산 표시
     result.value = res;
 };
-const onClickOp = (event) => () => { // document.addEventListener로 마우스를 통해 함수를 실행하기에 중첩 함수로 선언
+const onClickOp = (event) => { // document.addEventListener로 마우스를 통해 함수를 실행하기에 중첩 함수로 선언
     if(value[count] || value[count] === 0){ // value[count]의 숫자가 0이거나 그 외 숫자가 들어있다면 실행
         if(!!op[count]) res = res.slice(0, -1); // 입력된 op[count]를 재입력하면 이미 입력됐던 op[count]를 지움
          // 입력된 연산자를 op[count], res에 대입함
-        op[count] = event;
-        res += event;
+        op[count] = event.target.textContent;
+        res += event.target.textContent;
         // result.value = res;를 통해 사칙연산 표시
         result.value = res;
         // 연산결과 표시 후 연산자가 입력되면 value의 if(setInitial)에서 실행되는 초기화를 막기 위해 false 대입 
@@ -94,15 +94,15 @@ const showResult = () => {
         // 사칙연산이 우선순위에 따라 연산 되도록 함
         // *, /부터 찾음, 그 후에 +, -를 찾음
         for(let i = 0; op[i]; i++){
-            if(op[i] == '*'){
-                console.log(value[i], op[i], value[i+1]);
+            if(op[i] == 'x'){
+                console.log(value[i], op[i], value[i+1]); // x 연산 테스트
                 num = parseFloat(value[i]) * parseFloat(value[i+1]); // value : [1, 2, 3, 4] // op : ['*', '*', '*']
                 op.splice(i, 1);
                 value.splice(i, 2); // value : [3, 4], ['*', '*']
                 value.splice(i, 0, num); // value : [2, 3, 4], ['*', '*']
                 i--;
             }else if(op[i] == '/'){
-                console.log(value[i], op[i], value[i+1]);
+                console.log(value[i], op[i], value[i+1]); // / 연산 테스트
                 num = parseFloat(value[i]) / parseFloat(value[i+1]);
                 op.splice(i, 1);
                 value.splice(i, 2);
@@ -112,14 +112,14 @@ const showResult = () => {
         }
         for(let i = 0; op[i]; i++){
             if(op[i] == '+'){
-                // console.log(value[i], op[i], value[i+1]); // + 연산 테스트
+                console.log(value[i], op[i], value[i+1]); // + 연산 테스트
                 num = parseFloat(value[i]) + parseFloat(value[i+1]); // value : [1, 2, 3, 4] // op : ['*', '*', '*']
                 op.splice(i, 1);
                 value.splice(i, 2);
                 value.splice(i, 0, num);
                 i--;
             }else if(op[i] == '-'){
-                // console.log(value[i], op[i], value[i+1]); // - 연산 테스트
+                console.log(value[i], op[i], value[i+1]); // - 연산 테스트
                 num = parseFloat(value[i]) - parseFloat(value[i+1]);
                 op.splice(i, 1);
                 value.splice(i, 2);
@@ -138,23 +138,24 @@ const showResult = () => {
 }
 
 // 버튼이 눌렸는지 확인 후 함수 실행
-document.querySelector('#one').addEventListener('click', onClickNumber('1'));
-document.querySelector('#two').addEventListener('click', onClickNumber('2'));
-document.querySelector('#three').addEventListener('click', onClickNumber('3'));
-document.querySelector('#four').addEventListener('click', onClickNumber('4'));
-document.querySelector('#five').addEventListener('click', onClickNumber('5'));
-document.querySelector('#six').addEventListener('click', onClickNumber('6'));
-document.querySelector('#seven').addEventListener('click', onClickNumber('7'));
-document.querySelector('#eight').addEventListener('click', onClickNumber('8'));
-document.querySelector('#nine').addEventListener('click', onClickNumber('9'));
-document.querySelector('#zero').addEventListener('click', onClickNumber('0'));
-document.querySelector('#doubleZero').addEventListener('click', onClickNumber('00'));
-document.querySelector('#decimalPoint').addEventListener('click', onClickNumber('.'));
 
-document.querySelector('#plus').addEventListener('click', onClickOp('+'));
-document.querySelector('#minus').addEventListener('click', onClickOp('-'));
-document.querySelector('#division').addEventListener('click', onClickOp('/'));
-document.querySelector('#multiple').addEventListener('click', onClickOp('*'));
+document.querySelector('#one').addEventListener('click', onClickNumber);
+document.querySelector('#two').addEventListener('click', onClickNumber);
+document.querySelector('#three').addEventListener('click', onClickNumber);
+document.querySelector('#four').addEventListener('click', onClickNumber);
+document.querySelector('#five').addEventListener('click', onClickNumber);
+document.querySelector('#six').addEventListener('click', onClickNumber);
+document.querySelector('#seven').addEventListener('click', onClickNumber);
+document.querySelector('#eight').addEventListener('click', onClickNumber);
+document.querySelector('#nine').addEventListener('click', onClickNumber);
+document.querySelector('#zero').addEventListener('click', onClickNumber);
+document.querySelector('#doubleZero').addEventListener('click', onClickNumber);
+document.querySelector('#decimalPoint').addEventListener('click', onClickNumber);
+
+document.querySelector('#plus').addEventListener('click', onClickOp);
+document.querySelector('#minus').addEventListener('click', onClickOp);
+document.querySelector('#division').addEventListener('click', onClickOp);
+document.querySelector('#multiple').addEventListener('click', onClickOp);
 
 document.querySelector('#is').addEventListener('click', showResult);
 document.querySelector('#clear').addEventListener('click', Clear);
