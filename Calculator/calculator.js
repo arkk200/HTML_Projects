@@ -48,6 +48,7 @@ const onKeyDownNumber = (event) => { // onClickNumber함수와 달리 키보드 
     value[count] += event;
     res += event;
     result.value = res;
+    console.log(res);
 };
 const onKeyDownOp = (event) => { // onClickOp함수와 달리 키보드 입력을 받기에 중첩 함수로 선언하지 않음
     // 실행되는 코드는 onClickOp함수와 동일
@@ -89,17 +90,27 @@ const ClearEntry = () => {
 // 연산결과 값을 표시하기 위한 함수
 const showResult = () => {
     if(!op[count] && (value[count] || value[count] === 0)){ // res끝에 값이 연산자인지 확인, 아닐 경우 실행
-        console.log(value); // 버그 테스트용 출력
-        console.log(op); // 버그 테스트용 출력
+        // console.log(value); // 버그 테스트용 출력
+        // console.log(op); // 버그 테스트용 출력
         // 사칙연산이 우선순위에 따라 연산 되도록 함
-        // *, /부터 찾음, 그 후에 +, -를 찾음
+        // ^, (*, /), (+, -) 순서로 찾음 찾음
+        for(let i = 0; op[i]; i++){
+            if(op[i] == '^'){
+                console.log(value[i], op[i], value[i+1]); // ^ 연산 테스트
+                num = parseFloat(value[i]) ** parseFloat(value[i+1]);
+                op.splice(i, 1);
+                value.splice(i, 2);
+                value.splice(i, 0, num);
+                i--;
+            }
+        }
         for(let i = 0; op[i]; i++){
             if(op[i] == 'x'){
                 console.log(value[i], op[i], value[i+1]); // x 연산 테스트
-                num = parseFloat(value[i]) * parseFloat(value[i+1]); // value : [1, 2, 3, 4] // op : ['*', '*', '*']
+                num = parseFloat(value[i]) * parseFloat(value[i+1]); //
                 op.splice(i, 1);
-                value.splice(i, 2); // value : [3, 4], ['*', '*']
-                value.splice(i, 0, num); // value : [2, 3, 4], ['*', '*']
+                value.splice(i, 2);
+                value.splice(i, 0, num);
                 i--;
             }else if(op[i] == '/'){
                 console.log(value[i], op[i], value[i+1]); // / 연산 테스트
@@ -113,7 +124,7 @@ const showResult = () => {
         for(let i = 0; op[i]; i++){
             if(op[i] == '+'){
                 console.log(value[i], op[i], value[i+1]); // + 연산 테스트
-                num = parseFloat(value[i]) + parseFloat(value[i+1]); // value : [1, 2, 3, 4] // op : ['*', '*', '*']
+                num = parseFloat(value[i]) + parseFloat(value[i+1]);
                 op.splice(i, 1);
                 value.splice(i, 2);
                 value.splice(i, 0, num);
@@ -156,6 +167,7 @@ document.querySelector('#plus').addEventListener('click', onClickOp);
 document.querySelector('#minus').addEventListener('click', onClickOp);
 document.querySelector('#division').addEventListener('click', onClickOp);
 document.querySelector('#multiple').addEventListener('click', onClickOp);
+document.querySelector('#power').addEventListener('click', onClickOp);
 
 document.querySelector('#is').addEventListener('click', showResult);
 document.querySelector('#clear').addEventListener('click', Clear);
@@ -165,7 +177,7 @@ document.querySelector('#clearEntry').addEventListener('click', ClearEntry);
 // 키보드로 값 입력 받기
 let crtlStatus = false;
 window.addEventListener('keydown', event => {
-    // console.log(event.key); // key 테스트
+    console.log(event.key); // key 테스트
     switch(event.key){
         case '1': onKeyDownNumber('1');
             break;
@@ -191,9 +203,11 @@ window.addEventListener('keydown', event => {
             break;
         case '-': onKeyDownOp('-');
             break;
-        case '*': onKeyDownOp('*');
+        case '*': onKeyDownOp('x');
             break;
         case '/': onKeyDownOp('/');
+            break;
+        case '^': onKeyDownOp('^');
             break;
         case 'Enter': showResult();
             break;
